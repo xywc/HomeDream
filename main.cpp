@@ -8,7 +8,7 @@ using namespace std;
 
 enum ConstrcutionType {industrial,commercial,residential}; //声明枚举类型
 enum Quality {common,rare,epic};
-enum Unit {M,B,T,a,b,c};
+enum Unit {M,B,T,a,b,c,d};
 
 enum Object{
     convenience_store = 1,
@@ -71,13 +71,13 @@ static vector<Construction> residential_constructions={
     {11,1000,residential,common,5,{534,T},1,{{wood_factory,5.0f}},"木屋"},
     {12,1000,residential,common,5,{534,T},1,{{steel_plant,5.0f}},"钢结构房"},
     {13,1000,residential,common,5,{587,T},15,{{residential_building,1.0f}},"平房"},
-    {14,1000,residential,common,5,{630,T},15,{{supply_commodity,70.0f}},"小型公寓"},
+    {14,1100,residential,common,5,{11.6,a},15,{{supply_commodity,70.0f}},"小型公寓"},
     {15,1000,residential,common,5,{534,T},10,{{convenience_store,5.0f}},"居民楼"},
     {16,1000,residential,rare,4,{149,T},15,{{industrial_building,0.6f},{online,0.8f}},"人才公寓"},
-    {17,1003,residential,rare,3,{31.8,T},10,{{trade_center,3.0f},{supply_commodity,30.0f}},"花园洋房"},
+    {17,1100,residential,rare,4,{2.01,a},10,{{trade_center,4.0f},{supply_commodity,40.0f}},"花园洋房"},
     {18,1000,residential,rare,4,{149,T},15,{{online,0.8f},{residential_building,0.6f}},"中式小楼"},
     {19,1000,residential,epic,3,{40.5,T},1,{{online,0.6f},{folk_food,3.0f}},"空中别墅"},
-    {20,1000,residential,epic,1,{7.44,T},10,{{offline,0.1f},{supply_commodity,10.0f}},"复兴公馆"},
+    {20,1000,residential,epic,2,{14.8,T},10,{{offline,0.2f},{supply_commodity,20.0f}},"复兴公馆"},
 };
 
 static vector<Construction> commercial_constructions={
@@ -94,19 +94,19 @@ static vector<Construction> commercial_constructions={
 };
 
 static vector<Construction> industrial_constructions={
-    {21,1100,industrial,common,5,{11.6,a},35,{{online,1.4f}},"电厂"},
+    {21,1133,industrial,common,5,{31.2,a},35,{{online,1.4f}},"电厂"},
     {22,1000,industrial,common,5,{534,T},15,{{wooden_house,5.0f}},"木材厂"},
     {23,1000,industrial,common,5,{534,T},35,{{book_shop,5.0f}},"造纸厂"},
-    {24,1074,industrial,common,5,{5.84,a},35,{{offline,0.3f}},"水厂"},
+    {24,1100,industrial,common,5,{12.4,a},35,{{offline,0.3f}},"水厂"},
     {25,1000,industrial,common,5,{534,T},25,{{food_market,5.0f}},"食品厂"},
-    {26,1000,industrial,rare,4,{106,T},15,{{steel_house,4.0f},{industrial_building,0.6f}},"钢铁厂"},
+    {26,1100,industrial,rare,4,{1.97,a},15,{{steel_house,4.0f},{industrial_building,0.6f}},"钢铁厂"},
     {27,1000,industrial,epic,3,{26.7,T},15,{{petrol_station,3.0f},{offline,0.3f}},"人民石油"},
     {28,1000,industrial,rare,3,{26.7,T},35,{{clothing_store,3.0f},{commercial_building,0.45f}},"纺织厂"},
     {29,1001,industrial,rare,4,{110,T},25,{{hardware_store,4.0f},{penguin_machinery,2.0f}},"零件厂"},
     {30,1000,industrial,epic,3,{35.5,T},25,{{parts_factory,3.0f},{all,0.3f}},"企鹅机械"}
 };
 
-static map<int,float>city_mission={{32,0.2f},{6,2.0f}};
+static map<int,float>city_mission={{20,2.0f},{6,1.0f}};
 
 static vector<pair<string,Attribute>> china_travelogues={
     {"改革开放",{all,0.2f}},{"一带一路",{commercial_building,0.6f}},{"中国制造",{industrial_building,0.6f}},
@@ -177,10 +177,10 @@ static vector<pair<string,Attribute>> policy_center={
 
     {"制造强国",{industrial_building,12.0f}},{"优化营商环境",{supply_commodity,30.0f}},{"减税降费",{all,4.0f}},{"普惠金融",{commercial_building,12.0f}},
 
-    {"新型城镇化",{residential_building,2.4f}},{"乡村振兴",{online,0.8f}},{"精准扶贫",{offline,2.0f}},{"新一代人工智能",{all,0.8f}},
+    {"新型城镇化",{residential_building,6.0f}},{"乡村振兴",{online,0.8f}},{"精准扶贫",{offline,4.0f}},{"新一代人工智能",{all,0.8f}},
 };
 
-static float home_light=0.95f;
+static float home_light=0.05f;
 static Unit unit = b;
 static map<int,Construction> allconstructions;
 void HashConstruction()
@@ -415,6 +415,19 @@ tuple<float,float,float> ComputeIncome(map<int,pair<float,float>> &all_current_c
     return {online_income,offline_income,supply};
 }
 
+void PrintResult(map<int,pair<float,float>> all_current_construction)
+{
+    int i=0;
+    for(auto id : all_current_construction)
+    {
+        if(i==0)cout<<"商业建筑："<<endl;
+        if(i==3)cout<<"住宅建筑："<<endl;
+        if(i==6)cout<<"工业建筑："<<endl;
+        cout<<"   "<<allconstructions[id.first].name<<" "<<endl;
+        i++;
+    }
+}
+
 void OptimizeConstruction(vector<tuple<size_t,size_t,size_t>> commercial_set,
                             vector<tuple<size_t,size_t,size_t>> industrial_set,
                             vector<tuple<size_t,size_t,size_t>> residential_set,
@@ -422,6 +435,7 @@ void OptimizeConstruction(vector<tuple<size_t,size_t,size_t>> commercial_set,
                             map<int,pair<float,float>> &max_supply_construction,float &online_income,float &offline_income,float &supply)
 {
     map<int,pair<float,float>> all_current_construction;
+    float current_supply_online_income = 0.0f;
     for(size_t i=0;i<commercial_set.size();++i)
     {
         for(size_t j=0;j<industrial_set.size();++j)
@@ -450,12 +464,14 @@ void OptimizeConstruction(vector<tuple<size_t,size_t,size_t>> commercial_set,
                 if(current_supply > supply)
                 {
                     supply = current_supply;
+                    current_supply_online_income = current_online_income;
                     max_supply_construction = all_current_construction;
                 }
                 if(abs(current_supply-supply)<0.001f)
                 {
-                    if(current_online_income > online_income)
+                    if(current_online_income > current_supply_online_income)
                     {
+                        current_supply_online_income = current_online_income;
                         max_supply_construction = all_current_construction;
                     }
                 }
@@ -576,18 +592,7 @@ void ComputePolicyAddition(float &all_addition,float &online_addition,float &off
     }
 }
 
-void PrintResult(map<int,pair<float,float>> all_current_construction)
-{
-    int i=0;
-    for(auto id : all_current_construction)
-    {
-        if(i==0)cout<<"商业建筑："<<endl;
-        if(i==3)cout<<"住宅建筑："<<endl;
-        if(i==6)cout<<"工业建筑："<<endl;
-        cout<<"   "<<allconstructions[id.first].name<<" "<<endl;
-        i++;
-    }
-}
+
 
 void PrintResult(tuple<float,float,float> income)
 {
@@ -661,8 +666,8 @@ int main()
     all_current_construction.insert({21,{0.0f,0.0f}});
 
 
-    //tuple<float,float,float> income = ComputeIncome(all_current_construction);
-
+    tuple<float,float,float> income = ComputeIncome(all_current_construction);
+    PrintResult(income);
 
     map<int,pair<float,float>> max_online_construction;
     map<int,pair<float,float>> max_offline_construction;
