@@ -73,11 +73,11 @@ static vector<Construction> residential_constructions={
     {13,1000,residential,common,5,{587,T},15,{{residential_building,1.0f}},"平房"},
     {14,1100,residential,common,5,{11.6,a},15,{{supply_commodity,70.0f}},"小型公寓"},
     {15,1000,residential,common,5,{534,T},10,{{convenience_store,5.0f}},"居民楼"},
-    {16,1000,residential,rare,4,{149,T},15,{{industrial_building,0.6f},{online,0.8f}},"人才公寓"},
+    {16,1100,residential,rare,4,{2.76,a},15,{{industrial_building,0.6f},{online,0.8f}},"人才公寓"},
     {17,1100,residential,rare,4,{2.01,a},10,{{trade_center,4.0f},{supply_commodity,40.0f}},"花园洋房"},
-    {18,1000,residential,rare,4,{149,T},15,{{online,0.8f},{residential_building,0.6f}},"中式小楼"},
-    {19,1000,residential,epic,3,{40.5,T},1,{{online,0.6f},{folk_food,3.0f}},"空中别墅"},
-    {20,1000,residential,epic,2,{14.8,T},10,{{offline,0.2f},{supply_commodity,20.0f}},"复兴公馆"},
+    {18,1100,residential,rare,4,{2.76,a},15,{{online,0.8f},{residential_building,0.6f}},"中式小楼"},
+    {19,1181,residential,epic,3,{8.43,a},1,{{online,0.6f},{folk_food,3.0f}},"空中别墅"},
+    {20,1100,residential,epic,2,{274,T},10,{{offline,0.2f},{supply_commodity,20.0f}},"复兴公馆"},
 };
 
 static vector<Construction> commercial_constructions={
@@ -87,26 +87,26 @@ static vector<Construction> commercial_constructions={
     {4,1000,commercial,common,5,{534,T},15,{{parts_factory,5.0f}},"五金店"},
     {5,1000,commercial,common,5,{534,T},5,{{food_manufacturer,5.0f}},"菜市场"},
     {6,1000,commercial,rare,4,{106,T},15,{{paper_mill,4.0f},{school,4.0f}},"图书城"},
-    {7,1000,commercial,rare,3,{27.2,T},5,{{garden_house,3.0f},{supply_commodity,30.0f}},"商贸中心"},
+    {7,1000,commercial,rare,4,{109,T},5,{{garden_house,4.0f},{supply_commodity,40.0f}},"商贸中心"},
     {8,1000,commercial,rare,4,{128,T},25,{{people_petroleum,2.0f},{offline,0.4f}},"加油站"},
-    {9,1000,commercial,epic,3,{40.5,T},5,{{air_villa,3.0f},{online,0.6f}},"民食斋"},
-    {10,1000,commercial,epic,3,{43.1,T},15,{{offline,0.3f},{all,0.15f}},"媒体之声"},
+    {9,1100,commercial,epic,3,{749,T},5,{{air_villa,3.0f},{online,0.6f}},"民食斋"},
+    {10,1101,commercial,epic,3,{823,T},15,{{offline,0.3f},{all,0.15f}},"媒体之声"},
 };
 
 static vector<Construction> industrial_constructions={
-    {21,1133,industrial,common,5,{31.2,a},35,{{online,1.4f}},"电厂"},
+    {21,1167,industrial,common,5,{86.3,a},35,{{online,1.4f}},"电厂"},
     {22,1000,industrial,common,5,{534,T},15,{{wooden_house,5.0f}},"木材厂"},
     {23,1000,industrial,common,5,{534,T},35,{{book_shop,5.0f}},"造纸厂"},
-    {24,1100,industrial,common,5,{12.4,a},35,{{offline,0.3f}},"水厂"},
+    {24,1150,industrial,common,5,{54.8,a},35,{{offline,0.3f}},"水厂"},
     {25,1000,industrial,common,5,{534,T},25,{{food_market,5.0f}},"食品厂"},
     {26,1100,industrial,rare,4,{1.97,a},15,{{steel_house,4.0f},{industrial_building,0.6f}},"钢铁厂"},
     {27,1000,industrial,epic,3,{26.7,T},15,{{petrol_station,3.0f},{offline,0.3f}},"人民石油"},
-    {28,1000,industrial,rare,3,{26.7,T},35,{{clothing_store,3.0f},{commercial_building,0.45f}},"纺织厂"},
+    {28,1000,industrial,rare,4,{106,T},35,{{clothing_store,4.0f},{commercial_building,0.6f}},"纺织厂"},
     {29,1001,industrial,rare,4,{110,T},25,{{hardware_store,4.0f},{penguin_machinery,2.0f}},"零件厂"},
     {30,1000,industrial,epic,3,{35.5,T},25,{{parts_factory,3.0f},{all,0.3f}},"企鹅机械"}
 };
 
-static map<int,float>city_mission={{20,2.0f},{6,1.0f}};
+static map<int,float>city_mission={{12,1.5f},{15,1.5f},{14,1.0f}};
 
 static vector<pair<string,Attribute>> china_travelogues={
     {"改革开放",{all,0.2f}},{"一带一路",{commercial_building,0.6f}},{"中国制造",{industrial_building,0.6f}},
@@ -177,10 +177,10 @@ static vector<pair<string,Attribute>> policy_center={
 
     {"制造强国",{industrial_building,12.0f}},{"优化营商环境",{supply_commodity,30.0f}},{"减税降费",{all,4.0f}},{"普惠金融",{commercial_building,12.0f}},
 
-    {"新型城镇化",{residential_building,6.0f}},{"乡村振兴",{online,0.8f}},{"精准扶贫",{offline,4.0f}},{"新一代人工智能",{all,0.8f}},
+    {"新型城镇化",{residential_building,12.0f}},{"乡村振兴",{online,2.0f}},{"精准扶贫",{offline,6.0f}},{"新一代人工智能",{all,2.0f}},
 };
 
-static float home_light=0.05f;
+static float home_light=0.15f;
 static Unit unit = b;
 static map<int,Construction> allconstructions;
 void HashConstruction()
@@ -223,13 +223,13 @@ float ConvertUint(pair<float,char> income)
     return income.first*pow(10,3*(income.second-unit));
 }
 
-static float all_addition=0.0f;
-static float online_addition=0.0f;
-static float offline_addition=0.0f;
-static float commercial_addition=0.0f;
-static float industrial_addition=0.0f;
-static float residential_addtion=0.0f;
-static float supply_addition=0.0f;
+static float all_addition=2.5f;
+static float online_addition=2.1f;
+static float offline_addition=2.6f;
+static float commercial_addition=3.6f;
+static float industrial_addition=4.2f;
+static float residential_addtion=4.5f;
+static float supply_addition=34.0f;
 
 static float all_policy_addition=0.0f;
 static float online_policy_addition=0.0f;
@@ -628,8 +628,7 @@ void PrintResult(tuple<float,float,float> income)
 int main()
 {
     HashConstruction();
-    ComputeAddition(all_addition,online_addition,offline_addition,commercial_addition,
-                   industrial_addition,residential_addtion,supply_addition);
+    //ComputeAddition(all_addition,online_addition,offline_addition,commercial_addition,industrial_addition,residential_addtion,supply_addition);
     cout<<"-------家国之光加成--------"<<endl;
     cout<<"所有建筑："<<all_addition<<endl;
     cout<<"在线所有建筑："<<online_addition<<endl;
@@ -639,8 +638,7 @@ int main()
     cout<<"住宅建筑："<<residential_addtion<<endl;
     cout<<"供货："<<supply_addition<<endl;
 
-    ComputePolicyAddition(all_policy_addition,online_policy_addition,offline_policy_addition,commercial_policy_addition,
-                   industrial_policy_addition,residential_policy_addtion,supply_policy_addition);
+    ComputePolicyAddition(all_policy_addition,online_policy_addition,offline_policy_addition,commercial_policy_addition,industrial_policy_addition,residential_policy_addtion,supply_policy_addition);
     cout<<"-------政策中心加成--------"<<endl;
     cout<<"所有建筑："<<all_policy_addition<<endl;
     cout<<"在线所有建筑："<<online_policy_addition<<endl;
