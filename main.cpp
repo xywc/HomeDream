@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 #include <tuple>
 #include <set>
 #include <map>
@@ -8,9 +9,9 @@ using namespace std;
 
 enum ConstrcutionType {industrial,commercial,residential}; //声明枚举类型
 enum Quality {common,rare,epic};
-enum Unit {M,B,T,a,b,c,d};
-
+enum Unit {M,B,T,a,b,c,d,e,f};
 enum Object{
+    //商业建筑
     convenience_store = 1,
     school = 2,
     clothing_store = 3,
@@ -21,40 +22,44 @@ enum Object{
     petrol_station = 8,
     folk_food = 9,
     media_voice = 10,
+    natatorium = 11,
+    dream_express = 12,
 
-    wooden_house = 11,
-    steel_house = 12,
-    bungalow = 13,
-    studio_apartment = 14,
-    residential_buildings = 15,
-    talent_apartment = 16,
-    garden_house = 17,
-    chinese_building = 18,
-    air_villa = 19,
-    renaissance_mansion = 20,
+    //住宅建筑
+    wooden_house = 101,
+    steel_house = 102,
+    bungalow = 103,
+    studio_apartment = 104,
+    residential_buildings = 105,
+    talent_apartment = 106,
+    garden_house = 107,
+    chinese_building = 108,
+    air_villa = 109,
+    renaissance_mansion = 110,
+    dream_apartment = 111,
 
-    power_plant = 21,
-    wood_factory = 22,
-    paper_mill = 23,
-    water_plant = 24,
-    food_manufacturer = 25,
-    steel_plant = 26,
-    people_petroleum = 27,
-    textile_mill = 28,
-    parts_factory = 29,
-    penguin_machinery = 30,
+    //工业建筑
+    power_plant = 201,
+    wood_factory = 202,
+    paper_mill = 203,
+    water_plant = 204,
+    food_manufacturer = 205,
+    steel_plant = 206,
+    people_petroleum = 207,
+    textile_mill = 208,
+    parts_factory = 209,
+    penguin_machinery = 210,
+    coal_plant = 211,
 
-    all = 31,
-    online = 32,
-    offline = 33,
-    commercial_building = 34,
-    industrial_building = 35,
-    residential_building = 36,
-    supply_commodity = 37
+    all = -1,
+    online = -2,
+    offline = -3,
+    commercial_building = -4,
+    industrial_building = -5,
+    residential_building = -6,
+    supply_commodity = -7
 };
-
 typedef pair<Object,float>  Attribute;
-
 struct Construction{
     int id;
     int grade;
@@ -66,108 +71,50 @@ struct Construction{
     vector<Attribute> attribute;
     string name;
 };
-
+static map<int,float>city_mission={{1,2.0f},{10,1.0f},{5,1.0f}};
+static float home_light=0.35f;
+static Unit unit = c;
 static vector<Construction> residential_constructions={
-    {11,1000,residential,common,5,{534,T},1,{{wood_factory,5.0f}},"木屋"},
-    {12,1000,residential,common,5,{534,T},1,{{steel_plant,5.0f}},"钢结构房"},
-    {13,1000,residential,common,5,{587,T},15,{{residential_building,1.0f}},"平房"},
-    {14,1100,residential,common,5,{11.6,a},15,{{supply_commodity,70.0f}},"小型公寓"},
-    {15,1000,residential,common,5,{534,T},10,{{convenience_store,5.0f}},"居民楼"},
-    {16,1100,residential,rare,4,{2.76,a},15,{{industrial_building,0.6f},{online,0.8f}},"人才公寓"},
-    {17,1100,residential,rare,4,{2.01,a},10,{{trade_center,4.0f},{supply_commodity,40.0f}},"花园洋房"},
-    {18,1100,residential,rare,4,{2.76,a},15,{{online,0.8f},{residential_building,0.6f}},"中式小楼"},
-    {19,1181,residential,epic,3,{8.43,a},1,{{online,0.6f},{folk_food,3.0f}},"空中别墅"},
-    {20,1100,residential,epic,2,{274,T},10,{{offline,0.2f},{supply_commodity,20.0f}},"复兴公馆"},
+    {101,1300,residential,common,5,{4.19,b},1,{{wood_factory,5.0f}},"木屋"},
+    {102,1300,residential,common,5,{4.19,b},1,{{steel_plant,5.0f}},"钢结构房"},
+    {103,1300,residential,common,5,{4.61,b},15,{{residential_building,1.0f}},"平房"},
+    {104,1300,residential,common,5,{4.95,b},15,{{supply_commodity,70.0f}},"小型公寓"},
+    {105,1300,residential,common,5,{4.19,b},10,{{convenience_store,5.0f}},"居民楼"},
+    {106,1300,residential,rare,5,{5.87,b},15,{{industrial_building,0.75f},{online,1.0f}},"人才公寓"},
+    {107,1300,residential,rare,5,{4.28,b},10,{{trade_center,5.0f},{supply_commodity,50.0f}},"花园洋房"},
+    {108,1300,residential,rare,5,{5.87,b},15,{{online,1.0f},{residential_building,0.75f}},"中式小楼"},
+    {109,1400,residential,epic,4,{29.3,b},1,{{online,0.8f},{folk_food,4.0f}},"空中别墅"},
+    {110,1400,residential,epic,4,{32.3,b},10,{{offline,0.4f},{supply_commodity,40.0f}},"复兴公馆"},
+    {111,0,residential,epic,0,{0,b},5,{{natatorium,0.0f},{coal_plant,0.0f}},"梦想公寓"},
 };
 
 static vector<Construction> commercial_constructions={
-    {1,1000,commercial,common,5,{534,T},5,{{residential_buildings,5.0f}},"便利店"},
-    {2,1000,commercial,common,5,{534,T},25,{{book_shop,5.0f}},"学校"},
-    {3,1000,commercial,common,5,{534,T},25,{{textile_mill,5.0f}},"服装店"},
-    {4,1000,commercial,common,5,{534,T},15,{{parts_factory,5.0f}},"五金店"},
-    {5,1000,commercial,common,5,{534,T},5,{{food_manufacturer,5.0f}},"菜市场"},
-    {6,1000,commercial,rare,4,{106,T},15,{{paper_mill,4.0f},{school,4.0f}},"图书城"},
-    {7,1000,commercial,rare,4,{109,T},5,{{garden_house,4.0f},{supply_commodity,40.0f}},"商贸中心"},
-    {8,1000,commercial,rare,4,{128,T},25,{{people_petroleum,2.0f},{offline,0.4f}},"加油站"},
-    {9,1100,commercial,epic,3,{749,T},5,{{air_villa,3.0f},{online,0.6f}},"民食斋"},
-    {10,1101,commercial,epic,3,{823,T},15,{{offline,0.3f},{all,0.15f}},"媒体之声"},
+    {1,1300,commercial,common,5,{4.19,b},5,{{residential_buildings,5.0f}},"便利店"},
+    {2,1300,commercial,common,5,{4.19,b},25,{{book_shop,5.0f}},"学校"},
+    {3,1300,commercial,common,5,{4.19,b},25,{{textile_mill,5.0f}},"服装店"},
+    {4,1300,commercial,common,5,{4.19,b},15,{{parts_factory,5.0f}},"五金店"},
+    {5,1300,commercial,common,5,{4.19,b},5,{{food_manufacturer,5.0f}},"菜市场"},
+    {6,1300,commercial,rare,5,{4.19,b},15,{{paper_mill,5.0f},{school,5.0f}},"图书城"},
+    {7,1397,commercial,rare,5,{90.7,b},5,{{garden_house,5.0f},{supply_commodity,50.0f}},"商贸中心"},
+    {8,1300,commercial,rare,5,{5.05,b},25,{{people_petroleum,2.5f},{offline,0.5f}},"加油站"},
+    {9,1400,commercial,epic,4,{29.3,b},5,{{air_villa,4.0f},{online,0.8f}},"民食斋"},
+    {10,1300,commercial,epic,4,{1.35,b},15,{{offline,0.4f},{all,0.20f}},"媒体之声"},
+    {11,0,commercial,epic,0,{0,b},1,{{dream_apartment,0.0f},{commercial_building,0.0f}},"游泳馆"},
+    {12,0,commercial,rare,0,{0,b},1,{{commercial_building,0.0f},{supply_commodity,0.0f}},"追梦快递"},
 };
 
 static vector<Construction> industrial_constructions={
-    {21,1167,industrial,common,5,{86.3,a},35,{{online,1.4f}},"电厂"},
-    {22,1000,industrial,common,5,{534,T},15,{{wooden_house,5.0f}},"木材厂"},
-    {23,1000,industrial,common,5,{534,T},35,{{book_shop,5.0f}},"造纸厂"},
-    {24,1150,industrial,common,5,{54.8,a},35,{{offline,0.3f}},"水厂"},
-    {25,1000,industrial,common,5,{534,T},25,{{food_market,5.0f}},"食品厂"},
-    {26,1100,industrial,rare,4,{1.97,a},15,{{steel_house,4.0f},{industrial_building,0.6f}},"钢铁厂"},
-    {27,1000,industrial,epic,3,{26.7,T},15,{{petrol_station,3.0f},{offline,0.3f}},"人民石油"},
-    {28,1000,industrial,rare,4,{106,T},35,{{clothing_store,4.0f},{commercial_building,0.6f}},"纺织厂"},
-    {29,1001,industrial,rare,4,{110,T},25,{{hardware_store,4.0f},{penguin_machinery,2.0f}},"零件厂"},
-    {30,1000,industrial,epic,3,{35.5,T},25,{{parts_factory,3.0f},{all,0.3f}},"企鹅机械"}
-};
-
-static map<int,float>city_mission={{12,1.5f},{15,1.5f},{14,1.0f}};
-
-static vector<pair<string,Attribute>> china_travelogues={
-    {"改革开放",{all,0.2f}},{"一带一路",{commercial_building,0.6f}},{"中国制造",{industrial_building,0.6f}},
-    {"强国兴军",{offline,0.2f}},{"美丽中国",{online,0.2f}},{"体育大国",{offline,0.2f}},
-    {"减贫奇迹",{residential_building,0.6f}},{"一国两制",{all,0.2f}},{"文化自信",{online,0.2f}},
-    {"获得感、幸福感、安全感",{all,0.2f}},
-
-    {"云冈石窟",{all,0.1f}},{"平遥古城",{supply_commodity,2.0f}},{"鹳雀楼",{offline,0.1f}},
-    {"刀削面",{supply_commodity,2.0f}},{"五台山",{online,0.1f}},{"壶口瀑布",{all,0.1f}},
-    {"煤炭大省",{industrial_building,0.3f}},{"老陈醋",{residential_building,0.3f}},{"汾酒",{supply_commodity,2.0f}},
-    {"洪洞大槐树",{offline,0.1f}},
-
-    {"额济纳胡杨林",{offline,0.1f}},{"元上都遗址",{offline,0.1f}},{"马头琴、蒙古长调",{residential_building,0.3f}},
-    {"烤全羊",{supply_commodity,2.0f}},{"那达慕大会",{online,0.1f}},{"乌兰牧骑",{commercial_building,0.3f}},
-    {"羊煤土气",{industrial_building,0.3f}},{"奶制品",{supply_commodity,2.0f}},{"呼伦贝尔大草原",{residential_building,0.3f}},
-    {"巴丹吉林沙漠越野赛",{all,0.1f}},
-
-    {"中共一大会址",{offline,0.1f}},{"城隍庙豫园",{offline,0.1f}},{"东方明珠电视塔",{all,0.1f}},
-    {"世博会中国馆",{online,0.1f}},{"外滩",{commercial_building,0.3f}},{"浦东新区、自贸区",{industrial_building,0.3f}},
-    {"中国国际进口博览会",{supply_commodity,2.0f}},{"上海美术电影制片厂",{commercial_building,0.3f}},{"石库门",{residential_building,0.3f}},
-    {"本帮菜",{residential_building,0.3f}},
-
-    {"太湖",{online,0.1f}},{"昆曲",{online,0.1f}},{"江南园林",{offline,0.1f}},
-    {"大闸蟹",{supply_commodity,2.0f}},{"南京长江大桥",{all,0.1f}},{"花果山",{offline,0.1f}},
-    {"华西村",{residential_building,0.3f}},{"淮扬菜",{residential_building,0.3f}},{"宜兴紫砂壶",{commercial_building,0.3f}},
-    {"雨花台",{offline,0.1f}},
-
-    {"西湖",{all,0.1f}},{"越剧",{online,0.1f}},{"世界互联网大会",{commercial_building,0.3f}},
-    {"义乌小商品",{commercial_building,0.3f}},{"普陀山",{offline,0.1f}},{"嘉兴南湖红船",{offline,0.1f}},
-    {"杭州湾跨海大桥",{supply_commodity,2.0f}},{"宁波舟山港",{industrial_building,0.3f}},{"浙菜",{residential_building,0.3f}},
-    {"绿水青山就是金山银山理念",{all,0.1f}},
-
-    {"布达拉宫",{all,0.1f}},{"珠穆朗玛峰",{all,0.1f}},{"酥油茶",{supply_commodity,2.0f}},
-    {"青藏公路、川藏公路",{industrial_building,0.3f}},{"大昭寺",{offline,0.1f}},{"藏羚羊",{all,0.1f}},
-    {"纳木错湖",{online,0.1f}},{"林芝桃花",{online,0.1f}},{"格萨尔",{online,0.1f}},
-    {"唐卡",{residential_building,0.3f}},
-
-    {"兵马俑",{all,0.1f}},{"革命圣地",{all,0.1f}},{"秦岭",{offline,0.1f}},
-    {"大雁塔",{online,0.1f}},{"羊肉泡馍",{supply_commodity,2.0f}},{"秦腔",{online,0.1f}},
-    {"西安城墙",{industrial_building,0.3f}},{"安塞腰鼓",{residential_building,0.3f}},{"法门寺",{residential_building,0.3f}},
-    {"华山",{offline,0.1f}},
-
-    {"敦煌莫高窟",{all,0.1f}},{"酒泉卫星发射中心",{all,0.1f}},{"嘉峪关",{offline,0.1f}},
-    {"刘家峡水库",{industrial_building,0.3f}},{"兰州拉面",{supply_commodity,2.0f}},{"马踏飞燕",{commercial_building,0.3f}},
-    {"七彩丹霞",{online,0.1f}},{"麦积山石窟",{offline,0.1f}},{"羊皮筏子",{online,0.1f}},
-    {"拉卜楞寺",{residential_building,0.3f}},
-
-    {"门源油菜花",{online,0.1f}},{"塔尔寺",{offline,0.1f}},{"青藏铁路",{industrial_building,0.3f}},
-    {"青海花儿",{residential_building,0.3f}},{"三江源",{offline,0.1f}},{"酥油花",{online,0.1f}},
-    {"可可西里",{all,0.1f}},{"青稞酒",{supply_commodity,2.0f}},{"环青海湖自行车赛",{commercial_building,0.3f}},
-    {"引黄济宁工程",{industrial_building,0.3f}},
-
-    {"枸杞",{supply_commodity,2.0f}},{"青铜峡水利枢纽",{industrial_building,0.3f}},{"贺兰山",{offline,0.1f}},
-    {"西夏王陵",{offline,0.1f}},{"西部影城",{commercial_building,0.3f}},{"盐池滩羊",{supply_commodity,2.0f}},
-    {"治沙神器草方格",{all,0.1f}},{"沙坡头",{online,0.1f}},{"黄河大桥",{industrial_building,0.3f}},
-    {"六盘山",{all,0.1f}},
-
-    {"大巴扎",{commercial_building,0.3f}},{"坎儿井",{offline,0.1f}},{"喀纳斯湖",{offline,0.1f}},
-    {"霍尔果斯口岸",{industrial_building,0.3f}},{"天山天池",{all,0.1f}},{"和田玉",{supply_commodity,2.0f}},
-    {"新疆瓜果",{supply_commodity,2.0f}},{"手抓饭、烤羊肉串",{supply_commodity,2.0f}},{"民族歌舞",{online,0.1f}},
-    {"新疆生产建设兵团",{all,0.1f}},
+    {201,1300,industrial,common,5,{4.95,b},35,{{online,1.4f}},"电厂"},
+    {202,1300,industrial,common,5,{4.19,b},15,{{wooden_house,5.0f}},"木材厂"},
+    {203,1300,industrial,common,5,{4.19,b},35,{{book_shop,5.0f}},"造纸厂"},
+    {204,1300,industrial,common,5,{5.28,b},35,{{offline,0.3f}},"水厂"},
+    {205,1301,industrial,common,5,{4.35,b},25,{{food_market,5.0f}},"食品厂"},
+    {206,1300,industrial,rare,5,{4.19,b},15,{{steel_house,5.0f},{industrial_building,0.75f}},"钢铁厂"},
+    {207,1300,industrial,epic,4,{839,a},15,{{petrol_station,4.0f},{offline,0.4f}},"人民石油"},
+    {208,1300,industrial,rare,5,{4.19,b},35,{{clothing_store,5.0f},{commercial_building,0.75f}},"纺织厂"},
+    {209,1300,industrial,rare,5,{4.19,b},25,{{hardware_store,5.0f},{penguin_machinery,2.5f}},"零件厂"},
+    {210,1300,industrial,epic,4,{1.11,b},25,{{parts_factory,4.0f},{all,0.4f}},"企鹅机械"},
+    {211,0,industrial,epic,0,{0,b},1,{{dream_apartment,0.0f},{industrial_building,0.0f}},"强国煤业"}
 };
 
 static vector<pair<string,Attribute>> policy_center={
@@ -177,11 +124,20 @@ static vector<pair<string,Attribute>> policy_center={
 
     {"制造强国",{industrial_building,12.0f}},{"优化营商环境",{supply_commodity,30.0f}},{"减税降费",{all,4.0f}},{"普惠金融",{commercial_building,12.0f}},
 
-    {"新型城镇化",{residential_building,12.0f}},{"乡村振兴",{online,2.0f}},{"精准扶贫",{offline,6.0f}},{"新一代人工智能",{all,2.0f}},
+    {"新型城镇化",{residential_building,24.0f}},{"乡村振兴",{online,8.0f}},{"精准扶贫",{offline,8.0f}},{"新一代人工智能",{all,8.0f}},
+
+    {"医保异地结算",{industrial_building,36.0f}},{"大病保险",{offline,12.0f}},{"幼有所育",{residential_building,27.0f}},
+    {"老有所养",{commercial_building,36.0f}},{"全面二孩",{all,12.0f}},
 };
 
-static float home_light=0.15f;
-static Unit unit = b;
+static float all_addition=4.3f;
+static float supply_addition=58.0f;
+static float online_addition=4.1f;
+static float offline_addition=4.1f;
+static float residential_addtion=6.6f;
+static float commercial_addition=7.5f;
+static float industrial_addition=8.7f;
+
 static map<int,Construction> allconstructions;
 void HashConstruction()
 {
@@ -223,14 +179,6 @@ float ConvertUint(pair<float,char> income)
     return income.first*pow(10,3*(income.second-unit));
 }
 
-static float all_addition=2.5f;
-static float online_addition=2.1f;
-static float offline_addition=2.6f;
-static float commercial_addition=3.6f;
-static float industrial_addition=4.2f;
-static float residential_addtion=4.5f;
-static float supply_addition=34.0f;
-
 static float all_policy_addition=0.0f;
 static float online_policy_addition=0.0f;
 static float offline_policy_addition=0.0f;
@@ -238,7 +186,6 @@ static float commercial_policy_addition=0.0f;
 static float industrial_policy_addition=0.0f;
 static float residential_policy_addtion=0.0f;
 static float supply_policy_addition=0.0f;
-
 
 tuple<float,float,float> ComputeIncome(map<int,pair<float,float>> &all_current_construction)
 {
@@ -272,7 +219,6 @@ tuple<float,float,float> ComputeIncome(map<int,pair<float,float>> &all_current_c
             }
         }
     }
-
     for(auto i=all_current_construction.begin();i!=all_current_construction.end();++i)
     {
         current_construction_addition_online=0.0f;
@@ -288,16 +234,16 @@ tuple<float,float,float> ComputeIncome(map<int,pair<float,float>> &all_current_c
         i->second.second = ConvertUint(allconstructions[id].income);
         switch (allconstructions[id].type) {
         case industrial:
-            if(city_mission.find(35)!=city_mission.end())
+            if(city_mission.find(-5)!=city_mission.end())
             {
-                city_mission_addition_online +=city_mission.find(35)->second;
-                city_mission_addition_offline +=city_mission.find(35)->second;
+                city_mission_addition_online +=city_mission.find(-5)->second;
+                city_mission_addition_offline +=city_mission.find(-5)->second;
             }
 
-            if(current_addition.find(35)!=current_addition.end())
+            if(current_addition.find(-5)!=current_addition.end())
             {
-                current_construction_addition_online +=current_addition.find(35)->second;
-                current_construction_addition_offline +=current_addition.find(35)->second;
+                current_construction_addition_online +=current_addition.find(-5)->second;
+                current_construction_addition_offline +=current_addition.find(-5)->second;
             }
 
             policy_center_addition_online += all_policy_addition+industrial_policy_addition+online_policy_addition+home_light;
@@ -307,16 +253,16 @@ tuple<float,float,float> ComputeIncome(map<int,pair<float,float>> &all_current_c
             china_travelogues_addition_offline += all_addition+industrial_addition+offline_addition;
             break;
         case commercial:
-            if(city_mission.find(34)!=city_mission.end())
+            if(city_mission.find(-4)!=city_mission.end())
             {
-                city_mission_addition_online +=city_mission.find(34)->second;
-                city_mission_addition_offline +=city_mission.find(34)->second;
+                city_mission_addition_online +=city_mission.find(-4)->second;
+                city_mission_addition_offline +=city_mission.find(-4)->second;
             }
 
-            if(current_addition.find(34)!=current_addition.end())
+            if(current_addition.find(-4)!=current_addition.end())
             {
-                current_construction_addition_online +=current_addition.find(34)->second;
-                current_construction_addition_offline +=current_addition.find(34)->second;
+                current_construction_addition_online +=current_addition.find(-4)->second;
+                current_construction_addition_offline +=current_addition.find(-4)->second;
             }
 
             policy_center_addition_online += all_policy_addition+commercial_policy_addition+online_policy_addition+home_light;
@@ -326,16 +272,16 @@ tuple<float,float,float> ComputeIncome(map<int,pair<float,float>> &all_current_c
             china_travelogues_addition_offline += all_addition+commercial_addition+offline_addition;
             break;
         case residential:
-            if(city_mission.find(36)!=city_mission.end())
+            if(city_mission.find(-6)!=city_mission.end())
             {
-                city_mission_addition_online +=city_mission.find(36)->second;
-                city_mission_addition_offline +=city_mission.find(36)->second;
+                city_mission_addition_online +=city_mission.find(-6)->second;
+                city_mission_addition_offline +=city_mission.find(-6)->second;
             }
 
-            if(current_addition.find(36)!=current_addition.end())
+            if(current_addition.find(-6)!=current_addition.end())
             {
-                current_construction_addition_online +=current_addition.find(36)->second;
-                current_construction_addition_offline +=current_addition.find(36)->second;
+                current_construction_addition_online +=current_addition.find(-6)->second;
+                current_construction_addition_offline +=current_addition.find(-6)->second;
             }
 
             policy_center_addition_online += all_policy_addition+residential_policy_addtion+online_policy_addition+home_light;
@@ -351,23 +297,18 @@ tuple<float,float,float> ComputeIncome(map<int,pair<float,float>> &all_current_c
             city_mission_addition_online +=city_mission.find(id)->second;
             city_mission_addition_offline +=city_mission.find(id)->second;
         }
-        if(city_mission.find(32)!=city_mission.end())
+        if(city_mission.find(-2)!=city_mission.end())
         {
-            city_mission_addition_online +=city_mission.find(32)->second;
+            city_mission_addition_online +=city_mission.find(-2)->second;
         }
-        if(city_mission.find(33)!=city_mission.end())
+        if(city_mission.find(-3)!=city_mission.end())
         {
-            city_mission_addition_offline +=city_mission.find(33)->second;
+            city_mission_addition_offline +=city_mission.find(-3)->second;
         }
-        if(city_mission.find(31)!=city_mission.end())
+        if(city_mission.find(-1)!=city_mission.end())
         {
-            city_mission_addition_online +=city_mission.find(31)->second;
-            city_mission_addition_offline +=city_mission.find(31)->second;
-        }
-
-        if(city_mission.find(37)!=city_mission.end())
-        {
-            supply +=city_mission.find(37)->second;
+            city_mission_addition_online +=city_mission.find(-1)->second;
+            city_mission_addition_offline +=city_mission.find(-1)->second;
         }
 
         if(current_addition.find(id)!=current_addition.end())
@@ -375,18 +316,18 @@ tuple<float,float,float> ComputeIncome(map<int,pair<float,float>> &all_current_c
             current_construction_addition_online +=current_addition.find(id)->second;
             current_construction_addition_offline +=current_addition.find(id)->second;
         }
-        if(current_addition.find(32)!=current_addition.end())
+        if(current_addition.find(-2)!=current_addition.end())
         {
-            current_construction_addition_online +=current_addition.find(32)->second;
+            current_construction_addition_online +=current_addition.find(-2)->second;
         }
-        if(current_addition.find(33)!=current_addition.end())
+        if(current_addition.find(-3)!=current_addition.end())
         {
-            current_construction_addition_offline +=current_addition.find(33)->second;
+            current_construction_addition_offline +=current_addition.find(-3)->second;
         }
-        if(current_addition.find(31)!=current_addition.end())
+        if(current_addition.find(-1)!=current_addition.end())
         {
-            current_construction_addition_online +=current_addition.find(31)->second;
-            current_construction_addition_offline +=current_addition.find(31)->second;
+            current_construction_addition_online +=current_addition.find(-1)->second;
+            current_construction_addition_offline +=current_addition.find(-1)->second;
         }
 
 
@@ -404,13 +345,15 @@ tuple<float,float,float> ComputeIncome(map<int,pair<float,float>> &all_current_c
 
         i->second.second *= 0.5f;
     }
-
+    if(city_mission.find(-7)!=city_mission.end())
+    {
+        supply +=city_mission.find(-7)->second;
+    }
     for(auto i : all_current_construction)
     {
         online_income += i.second.first;
         offline_income += i.second.second;
     }
-
     supply +=supply_addition+supply_policy_addition;
     return {online_income,offline_income,supply};
 }
@@ -436,6 +379,7 @@ void OptimizeConstruction(vector<tuple<size_t,size_t,size_t>> commercial_set,
 {
     map<int,pair<float,float>> all_current_construction;
     float current_supply_online_income = 0.0f;
+
     for(size_t i=0;i<commercial_set.size();++i)
     {
         for(size_t j=0;j<industrial_set.size();++j)
@@ -460,7 +404,6 @@ void OptimizeConstruction(vector<tuple<size_t,size_t,size_t>> commercial_set,
                 float current_online_income = get<0>(income);
                 float current_offline_income = get<1>(income);
                 float current_supply = get<2>(income);
-
                 if(current_supply > supply)
                 {
                     supply = current_supply;
@@ -492,70 +435,6 @@ void OptimizeConstruction(vector<tuple<size_t,size_t,size_t>> commercial_set,
     }
 }
 
-void ComputeAddition(float &all_addition,float &online_addition,float &offline_addition,
-                    float &commercial_addition,float &industrial_addition,
-                    float &residential_addtion,float &supply_addition)
-{
-    for(auto it : china_travelogues)
-    {
-        Attribute attribute = it.second;
-        switch (attribute.first) {
-        case 31:
-            if(abs(attribute.second-0.1f)>0.01f && it.first != "改革开放" && it.first != "一国两制" && it.first != "获得感、幸福感、安全感")
-            {
-                cout<<it.first<<" "<<attribute.first<<" "<<attribute.second<<endl;
-            }
-            all_addition += (0.0f+attribute.second);
-            break;
-        case 32:
-            if(abs(attribute.second-0.1f)>0.01f && it.first != "美丽中国" && it.first != "文化自信")
-            {
-                cout<<it.first<<" "<<attribute.first<<" "<<attribute.second<<endl;
-            }
-            online_addition += (0.0f+attribute.second);
-            break;
-        case 33:
-            if(abs(attribute.second-0.1f)>0.01f && it.first != "强国兴军" && it.first != "体育大国")
-            {
-                cout<<it.first<<" "<<attribute.first<<" "<<attribute.second<<endl;
-            }
-            offline_addition += (0.0f+attribute.second);
-            break;
-        case 34:
-            if(abs(attribute.second-0.3f)>0.01f && it.first != "一带一路")
-            {
-                cout<<it.first<<" "<<attribute.first<<" "<<attribute.second<<endl;
-            }
-            commercial_addition += (0.0f+attribute.second);
-            break;
-        case 35:
-            if(abs(attribute.second-0.3f)>0.01f && it.first != "中国制造")
-            {
-                cout<<it.first<<" "<<attribute.first<<" "<<attribute.second<<endl;
-            }
-            industrial_addition += (0.0f+attribute.second);
-            break;
-        case 36:
-            if(abs(attribute.second-0.3f)>0.01f && it.first != "减贫奇迹")
-            {
-                cout<<it.first<<" "<<attribute.first<<" "<<attribute.second<<endl;
-            }
-            residential_addtion += (0.0f+attribute.second);
-            break;
-        case 37:
-            if(abs(attribute.second-2.0f)>0.01f )
-            {
-                cout<<it.first<<" "<<attribute.first<<" "<<attribute.second<<endl;
-            }
-            supply_addition += attribute.second;
-            break;
-        default:
-            cout<<it.first<<" "<<attribute.first<<" "<<attribute.second<<endl;
-            break;
-        }
-    }
-}
-
 void ComputePolicyAddition(float &all_addition,float &online_addition,float &offline_addition,
                     float &commercial_addition,float &industrial_addition,
                     float &residential_addtion,float &supply_addition)
@@ -564,25 +443,25 @@ void ComputePolicyAddition(float &all_addition,float &online_addition,float &off
     {
         Attribute attribute = it.second;
         switch (attribute.first) {
-        case 31:
+        case -1:
             all_addition += (0.0f+attribute.second);
             break;
-        case 32:
+        case -2:
             online_addition += (0.0f+attribute.second);
             break;
-        case 33:
+        case -3:
             offline_addition += (0.0f+attribute.second);
             break;
-        case 34:
+        case -4:
             commercial_addition += (0.0f+attribute.second);
             break;
-        case 35:
+        case -5:
             industrial_addition += (0.0f+attribute.second);
             break;
-        case 36:
+        case -6:
             residential_addtion += (0.0f+attribute.second);
             break;
-        case 37:
+        case -7:
             supply_addition += attribute.second;
             break;
         default:
@@ -591,8 +470,6 @@ void ComputePolicyAddition(float &all_addition,float &online_addition,float &off
         }
     }
 }
-
-
 
 void PrintResult(tuple<float,float,float> income)
 {
@@ -628,7 +505,6 @@ void PrintResult(tuple<float,float,float> income)
 int main()
 {
     HashConstruction();
-    //ComputeAddition(all_addition,online_addition,offline_addition,commercial_addition,industrial_addition,residential_addtion,supply_addition);
     cout<<"-------家国之光加成--------"<<endl;
     cout<<"所有建筑："<<all_addition<<endl;
     cout<<"在线所有建筑："<<online_addition<<endl;
@@ -653,15 +529,17 @@ int main()
     vector<tuple<size_t,size_t,size_t>> residential_set = SelectConstruction(residential_constructions);
 
     map<int,pair<float,float>> all_current_construction;
-    all_current_construction.insert({14,{0.0f,0.0f}});
-    all_current_construction.insert({15,{0.0f,0.0f}});
-    all_current_construction.insert({17,{0.0f,0.0f}});
-    all_current_construction.insert({1,{0.0f,0.0f}});
+    all_current_construction.insert({106,{0.0f,0.0f}});
+    all_current_construction.insert({107,{0.0f,0.0f}});
+    all_current_construction.insert({108,{0.0f,0.0f}});
+
     all_current_construction.insert({2,{0.0f,0.0f}});
-    all_current_construction.insert({3,{0.0f,0.0f}});
-    all_current_construction.insert({22,{0.0f,0.0f}});
-    all_current_construction.insert({23,{0.0f,0.0f}});
-    all_current_construction.insert({21,{0.0f,0.0f}});
+    all_current_construction.insert({6,{0.0f,0.0f}});
+    all_current_construction.insert({7,{0.0f,0.0f}});
+
+    all_current_construction.insert({210,{0.0f,0.0f}});
+    all_current_construction.insert({203,{0.0f,0.0f}});
+    all_current_construction.insert({201,{0.0f,0.0f}});
 
 
     tuple<float,float,float> income = ComputeIncome(all_current_construction);
@@ -694,5 +572,8 @@ int main()
     cout<<"-------最大供货奖励--------"<<endl;
     PrintResult(max_supply_construction);
     PrintResult(supplyincome);
+
     return 0;
 }
+
+
